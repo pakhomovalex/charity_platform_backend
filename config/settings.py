@@ -50,15 +50,15 @@ INSTALLED_APPS = [
     "projects.apps.ProjectsConfig",
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE =[
     "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -92,6 +92,7 @@ DATABASES = {
 
 # --- Auth ---
 AUTH_USER_MODEL = "users.CustomUser"
+SESSION_COOKIE_AGE = 86400
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
@@ -186,6 +187,9 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+    ),
 }
 
 SIMPLE_JWT = {
@@ -257,7 +261,13 @@ JAZZMIN_SETTINGS = {
         "token_blacklist",
     ],
     "order_with_respect_to": ["users", "projects"],
-    "topmenu_links": [],
+    "topmenu_links": [
+        {
+            "name": "На Головну",
+            "url": CLIENT_URL,
+            "new_window": True
+        },
+    ],
     "icons": {
         "users.CustomUser": "fas fa-user-circle",
         "projects.Project": "fas fa-hands-helping",
