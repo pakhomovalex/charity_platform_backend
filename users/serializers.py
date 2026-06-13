@@ -81,7 +81,7 @@ class CurrentUserSerializer(serializers.ModelSerializer):
             "instagram_url",
             "facebook_url",
         ]
-        read_only_fields = ["id", "email", "username"]
+        read_only_fields = ["id", "email"]
 
 
 class CustomRegisterSerializer(serializers.ModelSerializer):

@@ -170,7 +170,8 @@ else:
 
 # --- CORS ---
 CORS_ALLOWED_ORIGINS = os.getenv(
-    "CORS_ALLOWED_ORIGINS", "http://localhost:3000"
+    "CORS_ALLOWED_ORIGINS", # https://pidtrumyi.vercel.app/
+     "http://localhost:3000"
 ).split(",")
 
 CORS_ALLOW_HEADERS = [
@@ -231,7 +232,9 @@ REST_AUTH = {
 }
 
 # --- Frontend URL ---
-CLIENT_URL = os.getenv("CLIENT_URL", "http://localhost:3000")
+CLIENT_URL = os.getenv("CLIENT_URL", # https://pidtrumyi.vercel.app/
+ "http://localhost:3000"
+ )
 PASSWORD_RESET_URL_TEMPLATE = (
     f"{CLIENT_URL}/password-reset-confirm/{{uid}}/{{token}}/"
 )
