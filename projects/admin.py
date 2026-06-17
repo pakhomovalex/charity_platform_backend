@@ -49,12 +49,3 @@ class ProjectAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name", "slug")
     prepopulated_fields = {"slug": ("name",)}
-
-    # def has_add_permission(self, request):
-    #     return request.user.is_superuser
-
-    # def has_change_permission(self, request, obj=None):
-    #     return request.user.is_superuser
-
-    # def has_delete_permission(self, request, obj=None):
-    #     return request.user.is_superuser
