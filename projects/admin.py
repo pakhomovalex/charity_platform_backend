@@ -44,8 +44,6 @@ class ProjectAdmin(admin.ModelAdmin):
             fields.remove("author")
         return fields
 
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("name", "slug")
-    prepopulated_fields = {"slug": ("name",)}
 
-admin.site.register(Category, CategoryAdmin)
+# Базовая регистрация Category без кастомного класса
+admin.site.register(Category)
