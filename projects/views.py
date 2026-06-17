@@ -28,7 +28,7 @@ from drf_spectacular.utils import (
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.all().order_by("name")
     serializer_class = CategorySerializer
-     permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
