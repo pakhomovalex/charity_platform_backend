@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, JSONParser
 from .models import Category, Project, ProjectImage
 from django.db.models import Prefetch
-from .permissions import IsOwnerOrReadOnly
 from .serializers import (
     CategorySerializer,
     ProjectListSerializer,
@@ -81,7 +80,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly,
     ]
 
     parser_classes = [MultiPartParser, JSONParser]
