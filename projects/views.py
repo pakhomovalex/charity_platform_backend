@@ -1,9 +1,11 @@
+from django.db import models
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, JSONParser
 from .models import Category, Project, ProjectImage
 from django.db.models import Prefetch
+
 from .serializers import (
     CategorySerializer,
     ProjectListSerializer,
@@ -85,10 +87,23 @@ class ProjectViewSet(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser, JSONParser]
 
     def get_queryset(self):
-        queryset = Project.objects.filter(status=Project.Status.ACTIVE)
-        return queryset.prefetch_related("author", "category").prefetch_related(
-            Prefetch("images", queryset=ProjectImage.objects.order_by("order"))
-        )
+      user = self.request.user
+    
+      # Базовый queryset с prefetch
+      base_qs = Project.objects.prefetch_related(
+        "author", "category"
+      ).prefetch_related(
+        Prefetch("images", queryset=ProjectImage.objects.order_by("order"))
+      )
+    
+      # Анонимные пользователи — только активные
+      if not user.is_authenticated:
+        return base_qs.filter(status=Project.Status.ACTIVE)
+    
+      # Авторизованные — активные + свои (любые статусы)
+      return base_qs.filter(
+        models.Q(status=Project.Status.ACTIVE) | models.Q(author=user)
+      ).distinct()
 
     def get_serializer_class(self):
         if self.action == "list":

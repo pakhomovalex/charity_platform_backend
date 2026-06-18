@@ -54,6 +54,8 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
+        validated_data['status'] = 'active'
+
         request = self.context.get('request')
         images = request.FILES.getlist('images') if request else []
         
