@@ -103,8 +103,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
             models.Q(status=Project.Status.ACTIVE) | models.Q(author=user)
         ).distinct()
     
-    print(f"🔥 QUERYSET COUNT: {result.count()}")
-    return result
+        print(f"🔥 QUERYSET COUNT: {result.count()}")
+        return result
 
     def get_serializer_class(self):
         if self.action == "list":
