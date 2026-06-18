@@ -30,6 +30,46 @@ class ProjectImageSerializer(serializers.ModelSerializer):
         model = ProjectImage
         fields = ["id", "image", "order"]
 
+class ProjectCreateSerializer(serializers.ModelSerializer):
+    """Сериализатор для создания проекта с загрузкой изображений"""
+    
+    class Meta:
+        model = Project
+        fields = [
+            "title",
+            "subtitle",
+            "description",
+            "category",
+            "donation_type",
+            "price",
+            "target_amount",
+            "donation_percentage",
+            "fundraising_goal",
+            "end_date",
+            "monobank_jar_url",
+            "privatbank_konvert_url",
+            "paypal_me_url",
+            "other_payment_details",
+            "status",
+        ]
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        images = request.FILES.getlist('images') if request else []
+        
+        # Создаём проект
+        project = Project.objects.create(**validated_data)
+        
+        # Создаём изображения
+        for index, image in enumerate(images):
+            ProjectImage.objects.create(
+                project=project,
+                image=image,
+                order=index
+            )
+        
+        return project
+
 
 class ProjectListSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)

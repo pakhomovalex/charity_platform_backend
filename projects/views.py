@@ -4,11 +4,13 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, JSONParser
 from .models import Category, Project, ProjectImage
 from django.db.models import Prefetch
+from .permissions import IsOwnerOrReadOnly
 from .serializers import (
     CategorySerializer,
     ProjectListSerializer,
     ProjectDetailSerializer,
     ProjectImageSerializer,
+    ProjectCreateSerializer,
 )
 from drf_spectacular.utils import (
     extend_schema,
@@ -82,6 +84,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
         IsOwnerOrReadOnly,
     ]
 
+    parser_classes = [MultiPartParser, JSONParser]
+
     def get_queryset(self):
         queryset = Project.objects.filter(status=Project.Status.ACTIVE)
         return queryset.prefetch_related("author", "category").prefetch_related(
@@ -91,12 +95,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return ProjectListSerializer
+        elif self.action == "create":
+            return ProjectCreateSerializer
         return ProjectDetailSerializer
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-
-    parser_classes = [MultiPartParser, JSONParser]
 
     @extend_schema(
         summary="Завантажити зображення в галерею проєкту",
@@ -104,7 +108,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 Додає одне зображення до галереї конкретного проєкту.
 Надсилайте запит у форматі **multipart/form-data** з файлом у полі `image`.
         """,
-        tags=["Projects"],  # <--- ДОДАЄМО ЦЕЙ РЯДОК
+        tags=["Projects"],
     )
     @action(detail=True, methods=["post"], url_path="upload-image")
     def upload_image(self, request, pk=None):
