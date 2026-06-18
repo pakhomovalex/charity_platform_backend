@@ -101,8 +101,16 @@ class ProjectListSerializer(serializers.ModelSerializer):
         first_image = obj.images.first()
 
         if first_image and first_image.image:
+            # В продакшене используем R2 домен
+            if not settings.DEBUG and hasattr(settings, 'AWS_S3_CUSTOM_DOMAIN'):
+                return f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{first_image.image.name}"
+            
+            # В девелопменте — локальный URL
             request = self.context.get("request")
-            return request.build_absolute_uri(first_image.image.url)
+            if request:
+                return request.build_absolute_uri(first_image.image.url)
+            
+            return first_image.image.url
 
         return None
 
@@ -163,6 +171,11 @@ class ProjectForAuthorPageSerializer(serializers.ModelSerializer):
     def get_cover_image(self, obj):
         first_image = obj.images.first()
         if first_image and first_image.image:
+            if not settings.DEBUG and hasattr(settings, 'AWS_S3_CUSTOM_DOMAIN'):
+                return f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{first_image.image.name}"
+            
             request = self.context.get("request")
-            return request.build_absolute_uri(first_image.image.url)
+            if request:
+                return request.build_absolute_uri(first_image.image.url)
+            return first_image.image.url
         return None
