@@ -98,7 +98,7 @@ class CurrentUserProfileView(generics.RetrieveUpdateAPIView):
 
 class UserProfileView(generics.RetrieveAPIView):
     queryset = CustomUser.objects.all()
-    serializer_class = PublicUserSerializer
+    serializer_class = CurrentUserSerializer
     permission_classes = [permissions.AllowAny]
 
 class IsProfileOwnerOrAdmin(permissions.BasePermission):
