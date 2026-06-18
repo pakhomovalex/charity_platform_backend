@@ -83,6 +83,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly,
     ]
 
     parser_classes = [MultiPartParser, JSONParser]

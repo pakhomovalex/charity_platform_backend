@@ -96,6 +96,20 @@ class CurrentUserProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
+class UserProfileView(generics.RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = PublicUserSerializer
+    permission_classes = [permissions.AllowAny]
+
+class IsProfileOwnerOrAdmin(permissions.BasePermission):
+    """
+    Только владелец профиля или админ может редактировать.
+    """
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        
+        return obj == request.user or request.user.is_superuser
 
 # --- 3. АУТЕНТИФІКАЦІЯ ---
 
