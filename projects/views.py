@@ -87,23 +87,24 @@ class ProjectViewSet(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser, JSONParser]
 
     def get_queryset(self):
-      user = self.request.user
+        user = self.request.user
+        print(f"🔥 USER: {user}, ID: {user.id}, AUTH: {user.is_authenticated}")
     
-      # Базовый queryset с prefetch
-      base_qs = Project.objects.prefetch_related(
-        "author", "category"
-      ).prefetch_related(
-        Prefetch("images", queryset=ProjectImage.objects.order_by("order"))
-      )
+        base_qs = Project.objects.prefetch_related(
+            "author", "category"
+        ).prefetch_related(
+            Prefetch("images", queryset=ProjectImage.objects.order_by("order"))
+        )
     
-      # Анонимные пользователи — только активные
-      if not user.is_authenticated:
-        return base_qs.filter(status=Project.Status.ACTIVE)
+        if not user.is_authenticated:
+            return base_qs.filter(status=Project.Status.ACTIVE)
     
-      # Авторизованные — активные + свои (любые статусы)
-      return base_qs.filter(
-        models.Q(status=Project.Status.ACTIVE) | models.Q(author=user)
-      ).distinct()
+        result = base_qs.filter(
+            models.Q(status=Project.Status.ACTIVE) | models.Q(author=user)
+        ).distinct()
+    
+    print(f"🔥 QUERYSET COUNT: {result.count()}")
+    return result
 
     def get_serializer_class(self):
         if self.action == "list":
