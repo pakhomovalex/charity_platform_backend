@@ -80,6 +80,7 @@ class CurrentUserSerializer(serializers.ModelSerializer):
             "telegram_url",
             "instagram_url",
             "facebook_url",
+            "is_superuser"
         ]
         read_only_fields = ["id", "email"]
 
