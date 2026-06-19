@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Category, Project, ProjectImage
 from users.models import CustomUser
 from drf_spectacular.utils import extend_schema_field
-
+from django.conf import settings
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
