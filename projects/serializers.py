@@ -149,6 +149,7 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
 class ProjectForAuthorPageSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     cover_image = serializers.SerializerMethodField()
+    can_edit = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
