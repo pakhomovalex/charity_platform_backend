@@ -22,6 +22,8 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 
+User = get_user_model()
+
 # --- 1. ПУБЛІЧНІ ПРОФІЛІ АВТОРІВ ---
 
 
