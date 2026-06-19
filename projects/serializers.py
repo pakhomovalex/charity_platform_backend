@@ -165,7 +165,14 @@ class ProjectForAuthorPageSerializer(serializers.ModelSerializer):
             "price",
             "donation_percentage",
             "target_amount",
+            "can_edit",
         ]
+    
+    def get_can_edit(self, obj):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            return False
+        return request.user == obj.author
 
     @extend_schema_field(serializers.URLField())
     def get_cover_image(self, obj):
