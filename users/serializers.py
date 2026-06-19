@@ -11,6 +11,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+import os
 
 User = get_user_model()
 
