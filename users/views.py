@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from django.db.models import Count, Q, Prefetch
 from .models import CustomUser
 from projects.models import Project, ProjectImage
@@ -18,6 +19,8 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
 
 # --- 1. ПУБЛІЧНІ ПРОФІЛІ АВТОРІВ ---
 
