@@ -76,6 +76,14 @@ class AuthorViewSet(viewsets.ReadOnlyModelViewSet):
             return AuthorListSerializer
         return AuthorDetailSerializer
 
+    def get_serializer_context(self):
+        """
+        Передаємо request у контекст серіалізатора.
+        """
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
 
 # --- 2. ПРОФІЛЬ ПОТОЧНОГО КОРИСТУВАЧА ---
 
