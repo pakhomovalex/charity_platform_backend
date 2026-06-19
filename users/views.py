@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, JSONParser
+from rest_framework.decorators import api_view, permission_classes
 from django.db.models import Count, Q, Prefetch
 from .models import CustomUser
 from projects.models import Project, ProjectImage
@@ -165,3 +166,43 @@ class CustomPasswordResetView(generics.GenericAPIView):
             {"detail": "Лист для скидання паролю надіслано."},
             status=status.HTTP_200_OK,
         )
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def password_reset_confirm_custom(request):
+    uid = request.data.get('uid')
+    token = request.data.get('token')
+    new_password = request.data.get('new_password')
+    
+    if not all([uid, token, new_password]):
+        return Response(
+            {'error': 'Всі поля обовʼязкові'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    if len(new_password) < 8:
+        return Response(
+            {'error': 'Пароль має бути мінімум 8 символів'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try:
+        user = User.objects.get(pk=int(uid))
+    except (ValueError, TypeError, User.DoesNotExist):
+        return Response(
+            {'error': 'Недійсний користувач'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    if not default_token_generator.check_token(user, token):
+        return Response(
+            {'error': 'Недійсний або прострочений токен'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    user.set_password(new_password)
+    user.save()
+    
+    return Response({
+        'detail': 'Пароль успішно змінено. Тепер можеш увійти з новим паролем.'
+    })

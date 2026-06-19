@@ -13,6 +13,7 @@ from users.views import (
     CustomPasswordResetView,
     CurrentUserProfileView,
     GoogleLogin,
+    password_reset_confirm_custom,
 )
 
 
@@ -57,7 +58,7 @@ urlpatterns = [
     ),
     path(
         "api/v1/auth/password/reset/confirm/",
-        PasswordResetConfirmView.as_view(),
+        password_reset_confirm_custom,
         name="password_reset_confirm",
     ),
     path(
