@@ -327,8 +327,8 @@ JAZZMIN_UI_TWEAKS = {
 # else:
 #     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-DEFAULT_FROM_EMAIL = "pakhomov.alex.v@gmail.com"
+EMAIL_BACKEND = "config.email_backends.SendGridBackend"
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "pakhomov.alex.v@gmail.com")
 
 # --- Logging ---
 LOGGING = {
