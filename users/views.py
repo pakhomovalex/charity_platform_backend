@@ -24,6 +24,10 @@ from django.contrib.auth.tokens import default_token_generator
 
 User = get_user_model()
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 # --- 1. ПУБЛІЧНІ ПРОФІЛІ АВТОРІВ ---
 
 
@@ -77,11 +81,13 @@ class AuthorViewSet(viewsets.ReadOnlyModelViewSet):
         return AuthorDetailSerializer
 
     def get_serializer_context(self):
-        """
-        Передаємо request у контекст серіалізатора.
-        """
         context = super().get_serializer_context()
         context['request'] = self.request
+        
+        logger.info(f"=== get_serializer_context ===")
+        logger.info(f"Request user: {self.request.user}")
+        logger.info(f"Request user auth: {self.request.user.is_authenticated}")
+        
         return context
 
 

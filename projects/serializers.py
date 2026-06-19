@@ -4,6 +4,10 @@ from users.models import CustomUser
 from drf_spectacular.utils import extend_schema_field
 from django.conf import settings
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -171,8 +175,17 @@ class ProjectForAuthorPageSerializer(serializers.ModelSerializer):
     
     def get_can_edit(self, obj):
         request = self.context.get('request')
+        
+        logger.info(f"=== get_can_edit called ===")
+        logger.info(f"Request: {request}")
+        logger.info(f"Request user: {request.user if request else 'None'}")
+        logger.info(f"Request user auth: {request.user.is_authenticated if request else 'None'}")
+        logger.info(f"Project author: {obj.author}")
+        logger.info(f"Current user == author: {request.user == obj.author if request else 'No request'}")
+        
         if not request or not request.user.is_authenticated:
             return False
+        
         return request.user == obj.author
 
     @extend_schema_field(serializers.URLField())
