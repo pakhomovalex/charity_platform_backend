@@ -14,6 +14,9 @@ from django.template.loader import render_to_string
 
 User = get_user_model()
 
+CLIENT_URL = os.getenv("CLIENT_URL", # https://pidtrumyi.vercel.app/
+ "http://localhost:3000"
+)
 
 class AuthorListSerializer(serializers.ModelSerializer):
     specialization = CategorySerializer(many=True, read_only=True)
@@ -154,7 +157,7 @@ class FinalPasswordResetSerializer(serializers.Serializer):
         token = default_token_generator.make_token(user)
         
         url_template = settings.PASSWORD_RESET_URL_TEMPLATE
-        password_reset_url = url_template.format(uid=uid, token=token)
+        password_reset_url = password_reset_url = f"{CLIENT_URL}/password-reset-confirm?uid={user.pk}&token={token}"
         
         context = {
             'user': user,
