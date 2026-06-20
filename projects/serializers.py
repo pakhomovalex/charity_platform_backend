@@ -106,6 +106,9 @@ class ProjectListSerializer(serializers.ModelSerializer):
 
         if first_image and first_image.image:
             request = self.context.get("request")
+
+            logger.info(f"IMAGE NAME: {first_image.image.name}")
+            logger.info(f"IMAGE URL: {first_image.image.url}")
         
             if settings.DEBUG:
                 # Локально строим абсолютный URL через request
@@ -194,6 +197,9 @@ class ProjectForAuthorPageSerializer(serializers.ModelSerializer):
 
         if first_image and first_image.image:
             request = self.context.get("request")
+
+            logger.info(f"IMAGE NAME: {first_image.image.name}")
+            logger.info(f"IMAGE URL: {first_image.image.url}")
         
             if settings.DEBUG:
                 # Локально строим абсолютный URL через request
