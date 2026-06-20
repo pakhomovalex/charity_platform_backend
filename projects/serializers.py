@@ -101,22 +101,22 @@ class ProjectListSerializer(serializers.ModelSerializer):
         ]
 
     @extend_schema_field(serializers.URLField())
-    def get_cover_image(self, obj):
-        first_image = obj.images.first()
+def get_cover_image(self, obj):
+    first_image = obj.images.first()
 
-        if first_image and first_image.image:
-            # В продакшене используем R2 домен
-            if not settings.DEBUG and hasattr(settings, 'AWS_S3_CUSTOM_DOMAIN'):
-                return f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{first_image.image.name}"
-            
-            # В девелопменте — локальный URL
-            request = self.context.get("request")
+    if first_image and first_image.image:
+        request = self.context.get("request")
+        
+        if settings.DEBUG:
+            # Локально строим абсолютный URL через request
             if request:
                 return request.build_absolute_uri(first_image.image.url)
-            
+            return first_image.image.url
+        else:
+            # В продакшене S3Boto3Storage уже возвращает полный https:// URL
             return first_image.image.url
 
-        return None
+    return None
 
 
 class ProjectDetailSerializer(serializers.ModelSerializer):
@@ -189,14 +189,19 @@ class ProjectForAuthorPageSerializer(serializers.ModelSerializer):
         return request.user == obj.author
 
     @extend_schema_field(serializers.URLField())
-    def get_cover_image(self, obj):
-        first_image = obj.images.first()
-        if first_image and first_image.image:
-            if not settings.DEBUG and hasattr(settings, 'AWS_S3_CUSTOM_DOMAIN'):
-                return f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{first_image.image.name}"
-            
-            request = self.context.get("request")
+def get_cover_image(self, obj):
+    first_image = obj.images.first()
+
+    if first_image and first_image.image:
+        request = self.context.get("request")
+        
+        if settings.DEBUG:
+            # Локально строим абсолютный URL через request
             if request:
                 return request.build_absolute_uri(first_image.image.url)
             return first_image.image.url
-        return None
+        else:
+            # В продакшене S3Boto3Storage уже возвращает полный https:// URL
+            return first_image.image.url
+
+    return None
