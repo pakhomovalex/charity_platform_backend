@@ -101,7 +101,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
         ]
 
     @extend_schema_field(serializers.URLField())
-def get_cover_image(self, obj):
+    def get_cover_image(self, obj):
     first_image = obj.images.first()
 
     if first_image and first_image.image:
@@ -189,7 +189,7 @@ class ProjectForAuthorPageSerializer(serializers.ModelSerializer):
         return request.user == obj.author
 
     @extend_schema_field(serializers.URLField())
-def get_cover_image(self, obj):
+    def get_cover_image(self, obj):
     first_image = obj.images.first()
 
     if first_image and first_image.image:
