@@ -164,7 +164,7 @@ else:
             },
         },
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.WhiteNoiseStorage"
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
         },
     }
 
