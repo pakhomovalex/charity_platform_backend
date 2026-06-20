@@ -159,15 +159,14 @@ else:
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-            "OPTIONS": {},
+            "OPTIONS": {
+                "custom_domain": AWS_S3_CUSTOM_DOMAIN,
+            },
         },
         "staticfiles": {
-            # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
             "BACKEND": "whitenoise.storage.WhiteNoiseStorage"
         },
     }
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-    # STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
 
 # --- CORS ---
 CORS_ALLOWED_ORIGINS = os.getenv(
